@@ -131,19 +131,6 @@ The A-score behavioral questions (A1–A10) consistently outrank age, gender, et
 
 ---
 
-## Project Structure
-
-```
-autism-screening-explainability/
-├── poc_v4.py                        # Main pipeline script
-├── Autism-Child-Data.arff           # Dataset (download from UCI)
-├── outputs/
-│   ├── suhani_asd_poc_v4_results.png
-│   └── suhani_asd_poc_v4_shap.png
-└── README.md
-```
-
----
 
 ## Contributing
 
