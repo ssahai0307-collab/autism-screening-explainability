@@ -112,14 +112,11 @@ Output charts will be saved to the `outputs/` folder automatically.
 
 ---
 
-## Output Files
+### Model Performance
+![Model Results](images/suhani_asd_poc_v4_results.png)
 
-| File | Description |
-|------|-------------|
-| `outputs/suhani_asd_poc_v4_results.png` | Model comparison, confusion matrix, ROC curves, correlation heatmap, v3→v4 scaling impact |
-| `outputs/suhani_asd_poc_v4_shap.png` | SHAP bar plot + dot plot showing feature-level prediction drivers |
-
----
+### SHAP Explainability
+![SHAP Analysis](images/suhani_asd_poc_v4_shap.png)---
 
 ## Key Takeaways
 
