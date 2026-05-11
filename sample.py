@@ -1,24 +1,13 @@
 """
 =============================================================
-ASD Screening POC v4 — Suhani Sahai
+ASD Screening POC  — Suhani Sahai
 Behavioral Interventionist + Undergraduate Researcher
-De Anza College | ICAN
+
 =============================================================
 Dataset: UCI Autism Spectrum Disorder Screening Data for Children
 Source: https://archive.ics.uci.edu/dataset/419/
 Goal: Predict ASD likelihood from behavioral features alone
 
-IMPROVEMENTS in v4:
-  ✓ Feature scaling added — fixes SVM poor performance
-  ✓ Correlation analysis — identifies remaining leakage
-  ✓ SHAP values — explains WHY the model predicts ASD
-  ✓ Proper cross-validation pipeline with scaling
-  ✓ Cleaner, more publishable visualizations
-
-HOW TO RUN:
-  1. pip install pandas scikit-learn matplotlib seaborn shap
-  2. Place 'Autism-Child-Data.arff' in the same folder
-  3. python poc_v4.py
 =============================================================
 """
 
@@ -482,20 +471,7 @@ print(f"""
   ──────────────────────────────────────────────────────────
   Main chart  → {save_main}{shap_line}
 
-  What's New in v4:
-    ✓ StandardScaler applied — SVM accuracy fixed
-    ✓ Correlation analysis — remaining leakage checked
-    ✓ SHAP explainability — WHY the model predicts ASD
-    ✓ StratifiedKFold CV — more robust evaluation
-    ✓ Correlation heatmap — feature relationships visible
-    ✓ v3 vs v4 scaling impact chart
-
-  Next Steps:
-    1. Push to GitHub with updated README
-    2. Write Medium article — focus on SHAP clinical insights
-    3. Upload to Kaggle as public notebook
-    4. Email Dr. Warren & Dr. Weitlauf with GitHub link
   ──────────────────────────────────────────────────────────
   Suhani Sahai  |  ssahai0307@gmail.com
-  Behavioral Interventionist, ICAN  |  De Anza College
+  
 """)
