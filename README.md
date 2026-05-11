@@ -125,29 +125,7 @@ The dataset contains 10 behavioral screening questions (A1-A10) derived from the
 
 ---
 
-## Pipeline
 
-```
-Raw Data (.arff)
-     |
-Leakage Detection (drop 'result', 'age_desc')
-     |
-Correlation Analysis (flag high-correlation features)
-     |
-Label Encoding + Missing Value Imputation
-     |
-StandardScaler (fit on train, transform test)
-     |
-Train/Test Split (80/20, stratified)
-     |
-6 Model Training + StratifiedKFold CV
-     |
-SHAP Explainability (Random Forest)
-     |
-8 Separate Chart Files
-```
-
----
 
 ## Quickstart
 
@@ -174,25 +152,7 @@ All 8 charts will be saved to the `images/` folder automatically.
 
 ---
 
-## Project Structure
 
-```
-autism-screening-explainability/
-├── sample.py                        # Main pipeline script
-├── Autism-Child-Data.arff           # Dataset (download from UCI)
-├── images/
-│   ├── 01_model_comparison.png
-│   ├── 02_confusion_matrix.png
-│   ├── 03_correlation_heatmap.png
-│   ├── 04_feature_importance.png
-│   ├── 05_roc_curves.png
-│   ├── 06_scaling_impact.png
-│   ├── 07_shap_bar.png
-│   └── 08_shap_dotplot.png
-└── README.md
-```
-
----
 
 ## Key Takeaways
 
