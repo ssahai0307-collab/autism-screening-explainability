@@ -2,7 +2,7 @@
 =============================================================
 ASD Screening POC v4 — Suhani Sahai
 Behavioral Interventionist + Undergraduate Researcher
-De Anza College | ICAN
+
 =============================================================
 Dataset: UCI Autism Spectrum Disorder Screening Data for Children
 Source: https://archive.ics.uci.edu/dataset/419/
