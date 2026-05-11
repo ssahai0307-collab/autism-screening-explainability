@@ -1,43 +1,55 @@
-# 🧠 Autism Screening Explainability
+# Autism Screening Explainability
 ### Interpretable Machine Learning for Pediatric ASD Screening
 
-**Suhani Sahai** | Behavioral Interventionist, ICAN 
-📧 ssahai0307@gmail.com
+[![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Dataset](https://img.shields.io/badge/Dataset-UCI%20ML%20Repository-orange.svg)](https://archive.ics.uci.edu/dataset/419/)
 
 ---
 
-## Overview
+## About
 
-This project applies interpretable machine learning to pediatric autism spectrum disorder (ASD) screening using the Q-CHAT behavioral dataset. Unlike typical ML demos that stop at accuracy numbers, this pipeline connects model predictions back to **real ABA therapy goal areas** using SHAP explainability — bridging the gap between data science and clinical practice.
+This project builds an interpretable ML pipeline for predicting autism spectrum disorder (ASD) likelihood in children using behavioral screening data. The goal is not just high accuracy — but **explainability**: understanding *why* a model flags a child as at-risk, and mapping that back to real behavioral indicators used in clinical practice.
 
-Built by a behavioral interventionist with **300+ hours of direct ABA therapy experience**, this project reflects a unique perspective: understanding not just *what* the model predicts, but *why* — and what that means for a child sitting across from you in a one-on-one session.
+This project is open source and intended for educational use, research exploration, and as a reference implementation for clinical ML transparency.
 
 ---
 
-## Key Findings
+## Highlights
 
-### 🔑 Feature Scaling Changes Everything
-SVM accuracy jumped from **50.8% → 98.3%** after applying `StandardScaler`. This is a critical preprocessing step frequently overlooked in clinical ML pipelines — and a concrete, reproducible finding.
+- **6 models compared** — Logistic Regression, SVM, Random Forest, Gradient Boosting, KNN, Decision Tree
+- **SHAP explainability** — see exactly which behaviors drive each prediction
+- **Feature scaling analysis** — demonstrates how `StandardScaler` transforms SVM from 50.8% → 98.3% accuracy
+- **Leakage detection** — correlation analysis verifies model integrity before training
+- **StratifiedKFold CV** — robust evaluation on a small, balanced dataset
+- **Clean, reproducible pipeline** — single script, no notebooks required
 
-### 🔑 SHAP Reveals Clinical Meaning
-SHAP values show not just *which* features predict ASD, but *how much* each feature pushes the prediction toward YES or NO for each individual child — directly aligned with ABA therapy goal tracking.
+---
 
-### 🔑 Communication & Social Responsiveness Dominate
-Questions A1, A2, A4, and A9 (name response, eye contact, pointing to share interest, gestures) are the strongest predictors — consistent with the focus areas in real one-on-one ABA sessions at ICAN.
+## Results
+
+| Model | Accuracy | AUC-ROC | CV-AUC |
+|-------|----------|---------|--------|
+| **Logistic Regression** | **0.983** | **1.000** | **1.000** |
+| Support Vector Machine | 0.983 | 1.000 | 0.994 |
+| Random Forest | 0.966 | 0.997 | 0.981 |
+| Gradient Boosting | 0.915 | 0.975 | 0.981 |
+| Decision Tree | 0.898 | 0.898 | 0.859 |
+| K-Nearest Neighbor | 0.831 | 0.943 | 0.948 |
 
 ---
 
 ## Dataset
 
-- **Source**: [Autism Screening — Child Data (Kaggle)](https://www.kaggle.com/datasets/fabdelja/autism-screening-for-toddlers)
-- **Size**: 292 children × 21 features
-- **Target**: ASD diagnosis (YES / NO) — balanced: 151 NO, 141 YES
-- **Leakage removed**: `result` and `age_desc` dropped before modeling
+**Source**: [UCI ML Repository — Autism Spectrum Disorder Screening Data for Children](https://archive.ics.uci.edu/dataset/419/)  
+**File**: `Autism-Child-Data.arff`  
+**Size**: 292 children × 21 features  
+**Target**: ASD diagnosis (YES / NO) — balanced classes (151 NO, 141 YES)
 
-### Behavioral Screening Questions (A1–A10)
+The dataset contains 10 behavioral screening questions (A1–A10) derived from the Q-CHAT screening tool, along with demographic features such as age, gender, ethnicity, and family history.
 
-| Feature | Question |
-|---------|----------|
+| Feature | Screening Question |
+|---------|-------------------|
 | A1 | Does your child look at you when you call his/her name? |
 | A2 | How easy is it to get eye contact with your child? |
 | A3 | Does your child point to indicate that s/he wants something? |
@@ -54,104 +66,107 @@ Questions A1, A2, A4, and A9 (name response, eye contact, pointing to share inte
 ## Pipeline
 
 ```
-Data Loading → Leakage Check → Correlation Analysis
-     → StandardScaler → 6 Model Training → SHAP Explainability
-```
-
-1. **Preprocessing** — dropped leakage columns, encoded categoricals, imputed missing values
-2. **Correlation analysis** — verified no high-correlation leakage (A4 highest at r=0.569)
-3. **Feature scaling** — `StandardScaler` applied (critical for SVM and KNN)
-4. **Model comparison** — 6 classifiers evaluated on Accuracy, AUC-ROC, and StratifiedKFold CV
-5. **SHAP explainability** — feature importance mapped to clinical meaning
-
----
-
-## Results
-
-| Model | Accuracy | AUC-ROC | CV-AUC |
-|-------|----------|---------|--------|
-| **Logistic Regression** | **0.983** | **1.000** | **1.000** |
-| Support Vector Machine | 0.983 | 1.000 | 0.994 |
-| Random Forest | 0.966 | 0.997 | 0.981 |
-| Gradient Boosting | 0.915 | 0.975 | 0.981 |
-| Decision Tree | 0.898 | 0.898 | 0.859 |
-| K-Nearest Neighbor | 0.831 | 0.943 | 0.948 |
-
-**Best Model: Logistic Regression** (AUC: 1.000, CV-AUC: 1.000)
-
-```
-Classification Report — Logistic Regression:
-              precision    recall  f1-score
-          NO       1.00      0.97      0.98
-         YES       0.97      1.00      0.98
-    accuracy                           0.98
+Raw Data (.arff)
+     ↓
+Leakage Detection (drop 'result', 'age_desc')
+     ↓
+Correlation Analysis (flag high-correlation features)
+     ↓
+Label Encoding + Missing Value Imputation
+     ↓
+StandardScaler (fit on train, transform test)
+     ↓
+Train/Test Split (80/20, stratified)
+     ↓
+6 Model Training + StratifiedKFold CV
+     ↓
+SHAP Explainability (Random Forest)
+     ↓
+Visualizations + Clinical Insights
 ```
 
 ---
 
-## Outputs
+## Quickstart
 
-| File | Description |
-|------|-------------|
-| `outputs/suhani_asd_poc_v4_results.png` | Model comparison chart, confusion matrix, correlation heatmap, v3 vs v4 scaling impact |
-| `outputs/suhani_asd_poc_v4_shap.png` | SHAP summary plot — feature importance with clinical annotations |
-
----
-
-## Why This Matters Clinically
-
-> *"In 300+ hours of ABA therapy sessions at ICAN, I've watched children respond — or not respond — to their name, make eye contact, reach out and point. These aren't just features in a dataset. They're the exact behaviors we track, celebrate, and build goals around every single session."*
-> — Suhani Sahai
-
-SHAP explainability is used in state-of-the-art clinical AI research (including TRIAD's behavioral escalation prediction work) because it makes model decisions **auditable and interpretable** — a non-negotiable requirement for any tool used near clinical decision-making.
-
----
-
-## Setup & Usage
-
+### 1. Clone the repo
 ```bash
-# Clone the repo
 git clone https://github.com/ssahai03/autism-screening-explainability.git
 cd autism-screening-explainability
+```
 
-# Install dependencies
+### 2. Install dependencies
+```bash
 pip install pandas numpy scikit-learn matplotlib seaborn shap scipy
+```
 
-# Run the pipeline
+### 3. Download the dataset
+Download `Autism-Child-Data.arff` from the [UCI ML Repository](https://archive.ics.uci.edu/dataset/419/) and place it in the project root folder.
+
+### 4. Run
+```bash
 python poc_v4.py
 ```
 
-**Requirements**: Python 3.8+, see above for packages.
+Output charts will be saved to the `outputs/` folder automatically.
 
 ---
 
-## What's New in v4
+## Output Files
 
-- ✅ `StandardScaler` applied — SVM accuracy fixed (50.8% → 98.3%)
-- ✅ Correlation analysis — leakage verified and cleared
-- ✅ SHAP explainability — *why* the model predicts ASD
-- ✅ `StratifiedKFold` CV — more robust evaluation
-- ✅ Correlation heatmap — feature relationships visualized
-- ✅ v3 vs v4 scaling impact chart
+| File | Description |
+|------|-------------|
+| `outputs/suhani_asd_poc_v4_results.png` | Model comparison, confusion matrix, ROC curves, correlation heatmap, v3→v4 scaling impact |
+| `outputs/suhani_asd_poc_v4_shap.png` | SHAP bar plot + dot plot showing feature-level prediction drivers |
 
 ---
 
-## Next Steps
+## Key Takeaways
 
-- [ ] Medium article — SHAP clinical insights + the SVM scaling story
-- [ ] Kaggle public notebook
-- [ ] Outreach to Dr. Warren & Dr. Weitlauf (TRIAD / Vanderbilt)
+### Feature Scaling is Non-Negotiable for SVM
+Without `StandardScaler`, SVM performs at near-random (50.8% accuracy). After scaling, it reaches 98.3%. This is a commonly overlooked preprocessing step in clinical ML pipelines.
 
----
+### Explainability > Accuracy Alone
+A model that says "this child is at risk" is only useful if clinicians understand why. SHAP values make the model's reasoning transparent — which features pushed the prediction, by how much, and in which direction.
 
-## Author
-
-**Suhani Sahai**  
-Behavioral Interventionist, ICAN | De Anza College Student  
-📧 ssahai0307@gmail.com | 🐙 [@ssahai03](https://github.com/ssahai03)
-
-*This project was developed as part of an independent ML learning curriculum supervised by Nitin Sahai.*
+### Behavioral Features Outperform Demographics
+The A-score behavioral questions (A1–A10) consistently outrank age, gender, ethnicity, and other demographic features in importance. Communication and social responsiveness indicators are the strongest predictors.
 
 ---
 
-*Dataset used for educational and research purposes only. Not intended for clinical diagnosis.*
+## Project Structure
+
+```
+autism-screening-explainability/
+├── poc_v4.py                        # Main pipeline script
+├── Autism-Child-Data.arff           # Dataset (download from UCI)
+├── outputs/
+│   ├── suhani_asd_poc_v4_results.png
+│   └── suhani_asd_poc_v4_shap.png
+└── README.md
+```
+
+---
+
+## Contributing
+
+Contributions are welcome. If you'd like to extend this project — additional datasets, model architectures, a web interface, or clinical validation — feel free to open an issue or submit a pull request.
+
+---
+
+## Disclaimer
+
+This project is for **educational and research purposes only**. It is not intended for clinical diagnosis or medical decision-making. Always consult a qualified clinician for ASD screening and diagnosis.
+
+---
+
+## License
+
+MIT License — free to use, modify, and distribute with attribution.
+
+---
+
+## Acknowledgements
+
+- Dataset: [Thabtah, F. (2017). UCI ML Repository](https://archive.ics.uci.edu/dataset/419/)
+- SHAP library: [Lundberg & Lee, 2017](https://github.com/shap/shap)
