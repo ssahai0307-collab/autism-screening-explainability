@@ -1,7 +1,7 @@
 # 🧠 Autism Screening Explainability
 ### Interpretable Machine Learning for Pediatric ASD Screening
 
-**Suhani Sahai** | Behavioral Interventionist, ICAN | De Anza College  
+**Suhani Sahai** | Behavioral Interventionist, ICAN 
 📧 ssahai0307@gmail.com
 
 ---
