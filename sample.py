@@ -38,7 +38,7 @@ try:
     SHAP_AVAILABLE = True
 except ImportError:
     SHAP_AVAILABLE = False
-    print("  ⚠️  SHAP not installed. Run: pip install shap")
+    print("   SHAP not installed. Run: pip install shap")
     print("      SHAP plots will be skipped.\n")
 
 # ── OUTPUT FOLDER ─────────────────────────────────────────
@@ -86,7 +86,7 @@ search_paths = [
 
 arff_path = next((p for p in search_paths if os.path.exists(p)), None)
 if arff_path is None:
-    print("\n  ⚠️  File not found automatically.")
+    print("\n   File not found automatically.")
     arff_path = input("  Enter full path to Autism-Child-Data.arff: ").strip().strip("'\"")
     if not os.path.exists(arff_path):
         raise FileNotFoundError(f"File not found: {arff_path}")
@@ -116,7 +116,7 @@ drop_cols = ['result', 'age_desc']
 dropped = [c for c in drop_cols if c in X.columns]
 X = X.drop(columns=dropped)
 if dropped:
-    print(f"  ⚠️  Dropped (leakage/redundant): {dropped}")
+    print(f"  Dropped (leakage/redundant): {dropped}")
 
 # Encode target
 le_target = LabelEncoder()
@@ -144,13 +144,13 @@ print(f"\n  Feature correlations with ASD target (|r|):")
 print(f"  {'Feature':<25} {'|Correlation|':>14}  {'Risk':>6}")
 print("  " + "-" * 50)
 for feat, corr in correlations.items():
-    risk = "⚠️  HIGH" if corr > 0.8 else ("  MEDIUM" if corr > 0.5 else "  OK")
+    risk = "HIGH" if corr > 0.8 else ("  MEDIUM" if corr > 0.5 else "  OK")
     bar  = "█" * int(corr * 20)
     print(f"  {feat:<25} {corr:>14.3f}  {risk}  {bar}")
 
 high_corr = correlations[correlations > 0.8].index.tolist()
 if high_corr:
-    print(f"\n  ⚠️  Highly correlated features (potential leakage): {high_corr}")
+    print(f"\n  Highly correlated features (potential leakage): {high_corr}")
     print(f"      Consider dropping these for a fully clean model.")
 else:
     print(f"\n  ✓ No high-correlation leakage detected — model is clean!")
@@ -167,8 +167,8 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled  = scaler.transform(X_test)
 X_all_scaled   = scaler.transform(X_processed)
-print("  ✓ StandardScaler applied (mean=0, std=1)")
-print("  ✓ This fixes SVM and improves KNN & Logistic Regression")
+print("  StandardScaler applied (mean=0, std=1)")
+print("  This fixes SVM and improves KNN & Logistic Regression")
 
 # ── STEP 7: TRAIN MODELS WITH SCALING PIPELINE ────────────
 print("\n[6/8] Training 6 Models (scaled)...")
@@ -413,10 +413,10 @@ if SHAP_AVAILABLE:
         plt.close()
 
     except Exception as e:
-        print(f"  ⚠️  SHAP generation error: {e}")
+        print(f"   SHAP generation error: {e}")
         print("      Main results are still complete and valid.")
 else:
-    print("\n  ⚠️  Install SHAP to generate explainability charts:")
+    print("\n   Install SHAP to generate explainability charts:")
     print("      pip install shap")
 
 # ── CLINICAL INSIGHTS ─────────────────────────────────────
@@ -437,20 +437,20 @@ print("""
     A9  — Does your child use simple gestures?
     A10 — Does your child stare at nothing with no apparent purpose?
 
-  🔑 v3 → v4 KEY FINDING — FEATURE SCALING MATTERS:
+  v3 → v4 KEY FINDING — FEATURE SCALING MATTERS:
   SVM accuracy improved from 50.8% → meaningful performance after
   StandardScaler was applied. This is a critical preprocessing step
   often overlooked in clinical ML pipelines — and a publishable
   finding in its own right.
 
-  🔑 SHAP EXPLAINABILITY — WHY THIS MATTERS CLINICALLY:
+  SHAP EXPLAINABILITY — WHY THIS MATTERS CLINICALLY:
   SHAP values show not just WHICH features predict ASD, but HOW
   MUCH each feature pushes the prediction toward YES or NO for
   each individual child. This is directly relevant to TRIAD's
   behavioral escalation prediction research — the same technique
   is used in state-of-the-art clinical AI papers.
 
-  🔑 CLINICAL OBSERVATION:
+  CLINICAL OBSERVATION:
   Communication and social responsiveness (A1, A2, A4, A9) remain
   the strongest predictors — consistent with ABA therapy's focus
   on these exact goal areas in one-on-one sessions at ICAN.
@@ -467,7 +467,7 @@ for name, res in sorted(results.items(),
 
 shap_line = f"\n  SHAP chart  → {save_shap}" if save_shap else ""
 print(f"""
-  ✅ POC v4 COMPLETE
+  
   ──────────────────────────────────────────────────────────
   Main chart  → {save_main}{shap_line}
 
