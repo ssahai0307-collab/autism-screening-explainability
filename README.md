@@ -11,7 +11,7 @@
 
 This project builds an interpretable ML pipeline for predicting autism spectrum disorder (ASD) likelihood in children using behavioral screening data. The goal is not just high accuracy — but **explainability**: understanding *why* a model flags a child as at-risk, and mapping that back to real behavioral indicators used in clinical practice.
 
-
+This project is open source and intended for educational use, research exploration, and as a reference implementation for clinical ML transparency.
 
 ---
 
@@ -19,10 +19,10 @@ This project builds an interpretable ML pipeline for predicting autism spectrum 
 
 - **6 models compared** — Logistic Regression, SVM, Random Forest, Gradient Boosting, KNN, Decision Tree
 - **SHAP explainability** — see exactly which behaviors drive each prediction
-- **Feature scaling analysis** — demonstrates how `StandardScaler` transforms SVM from 50.8% → 98.3% accuracy
+- **Feature scaling analysis** — demonstrates how `StandardScaler` transforms SVM from 50.8% to 98.3% accuracy
 - **Leakage detection** — correlation analysis verifies model integrity before training
 - **StratifiedKFold CV** — robust evaluation on a small, balanced dataset
-- **Clean, reproducible pipeline** — single script, no notebooks required
+- **8 separate charts** — each visualization saved as its own file for easy reference
 
 ---
 
@@ -39,14 +39,76 @@ This project builds an interpretable ML pipeline for predicting autism spectrum 
 
 ---
 
+## Visualizations
+
+### Model Performance
+
+**Chart 1 — Model Comparison**
+Accuracy, AUC-ROC, and CV-AUC side by side across all 6 classifiers.
+
+![Model Comparison](images/01_model_comparison.png)
+
+---
+
+**Chart 2 — Confusion Matrix**
+Predicted vs actual ASD labels for the best performing model (Logistic Regression).
+
+![Confusion Matrix](images/02_confusion_matrix.png)
+
+---
+
+**Chart 3 — Feature Correlations with ASD Target**
+Heatmap showing how strongly each feature correlates with the ASD diagnosis label.
+
+![Correlation Heatmap](images/03_correlation_heatmap.png)
+
+---
+
+**Chart 4 — Feature Importance (Random Forest)**
+Which features the Random Forest weighted most heavily. Blue = behavioral (A-scores), Orange = demographic.
+
+![Feature Importance](images/04_feature_importance.png)
+
+---
+
+**Chart 5 — ROC Curves**
+Receiver operating characteristic curves for all 6 models, with AUC scores in the legend.
+
+![ROC Curves](images/05_roc_curves.png)
+
+---
+
+**Chart 6 — Impact of Feature Scaling**
+Side-by-side comparison of SVM and KNN performance before (v3) and after (v4) applying StandardScaler.
+
+![Scaling Impact](images/06_scaling_impact.png)
+
+---
+
+### SHAP Explainability
+
+**Chart 7 — SHAP Bar Plot**
+Mean absolute SHAP value per feature — how much each feature impacts the model output on average.
+
+![SHAP Bar](images/07_shap_bar.png)
+
+---
+
+**Chart 8 — SHAP Dot Plot**
+Individual-level SHAP values for the top 10 features. Each dot is one child. Red = high feature value, Blue = low feature value.
+
+![SHAP Dot Plot](images/08_shap_dotplot.png)
+
+---
+
 ## Dataset
 
 **Source**: [UCI ML Repository — Autism Spectrum Disorder Screening Data for Children](https://archive.ics.uci.edu/dataset/419/)  
 **File**: `Autism-Child-Data.arff`  
-**Size**: 292 children × 21 features  
+**Size**: 292 children x 21 features  
 **Target**: ASD diagnosis (YES / NO) — balanced classes (151 NO, 141 YES)
 
-The dataset contains 10 behavioral screening questions (A1–A10) derived from the Q-CHAT screening tool, along with demographic features such as age, gender, ethnicity, and family history.
+The dataset contains 10 behavioral screening questions (A1-A10) derived from the Q-CHAT screening tool, along with demographic features such as age, gender, ethnicity, and family history.
 
 | Feature | Screening Question |
 |---------|-------------------|
@@ -63,6 +125,29 @@ The dataset contains 10 behavioral screening questions (A1–A10) derived from t
 
 ---
 
+## Pipeline
+
+```
+Raw Data (.arff)
+     |
+Leakage Detection (drop 'result', 'age_desc')
+     |
+Correlation Analysis (flag high-correlation features)
+     |
+Label Encoding + Missing Value Imputation
+     |
+StandardScaler (fit on train, transform test)
+     |
+Train/Test Split (80/20, stratified)
+     |
+6 Model Training + StratifiedKFold CV
+     |
+SHAP Explainability (Random Forest)
+     |
+8 Separate Chart Files
+```
+
+---
 
 ## Quickstart
 
@@ -85,30 +170,46 @@ Download `Autism-Child-Data.arff` from the [UCI ML Repository](https://archive.i
 python sample.py
 ```
 
+All 8 charts will be saved to the `images/` folder automatically.
+
 ---
 
-### Model Performance
-![Model Results](images/suhani_asd_poc_v4_results.png)
+## Project Structure
 
-### SHAP Explainability
-![SHAP Analysis](images/suhani_asd_poc_v4_shap.png)---
+```
+autism-screening-explainability/
+├── sample.py                        # Main pipeline script
+├── Autism-Child-Data.arff           # Dataset (download from UCI)
+├── images/
+│   ├── 01_model_comparison.png
+│   ├── 02_confusion_matrix.png
+│   ├── 03_correlation_heatmap.png
+│   ├── 04_feature_importance.png
+│   ├── 05_roc_curves.png
+│   ├── 06_scaling_impact.png
+│   ├── 07_shap_bar.png
+│   └── 08_shap_dotplot.png
+└── README.md
+```
+
+---
 
 ## Key Takeaways
 
 ### Feature Scaling is Non-Negotiable for SVM
 Without `StandardScaler`, SVM performs at near-random (50.8% accuracy). After scaling, it reaches 98.3%. This is a commonly overlooked preprocessing step in clinical ML pipelines.
 
-### Explainability > Accuracy Alone
+### Explainability Over Accuracy Alone
 A model that says "this child is at risk" is only useful if clinicians understand why. SHAP values make the model's reasoning transparent — which features pushed the prediction, by how much, and in which direction.
 
 ### Behavioral Features Outperform Demographics
-The A-score behavioral questions (A1–A10) consistently outrank age, gender, ethnicity, and other demographic features in importance. Communication and social responsiveness indicators are the strongest predictors.
+The A-score behavioral questions (A1-A10) consistently outrank age, gender, ethnicity, and other demographic features in importance. Communication and social responsiveness indicators are the strongest predictors.
 
 ---
 
 ## Contributing
 
-Contributions are welcome. If you'd like to extend this project — additional datasets, model architectures, a web interface, or clinical validation — feel free to open an issue or submit a pull request.
+Contributions are welcome. If you would like to extend this project — additional datasets, model architectures, a web interface, or clinical validation — feel free to open an issue or submit a pull request.
 
 ---
 
