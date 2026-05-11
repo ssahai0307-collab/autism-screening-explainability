@@ -11,7 +11,7 @@
 
 This project builds an interpretable ML pipeline for predicting autism spectrum disorder (ASD) likelihood in children using behavioral screening data. The goal is not just high accuracy — but **explainability**: understanding *why* a model flags a child as at-risk, and mapping that back to real behavioral indicators used in clinical practice.
 
-This project is open source and intended for educational use, research exploration, and as a reference implementation for clinical ML transparency.
+
 
 ---
 
@@ -63,29 +63,6 @@ The dataset contains 10 behavioral screening questions (A1–A10) derived from t
 
 ---
 
-## Pipeline
-
-```
-Raw Data (.arff)
-     ↓
-Leakage Detection (drop 'result', 'age_desc')
-     ↓
-Correlation Analysis (flag high-correlation features)
-     ↓
-Label Encoding + Missing Value Imputation
-     ↓
-StandardScaler (fit on train, transform test)
-     ↓
-Train/Test Split (80/20, stratified)
-     ↓
-6 Model Training + StratifiedKFold CV
-     ↓
-SHAP Explainability (Random Forest)
-     ↓
-Visualizations + Clinical Insights
-```
-
----
 
 ## Quickstart
 
@@ -105,10 +82,8 @@ Download `Autism-Child-Data.arff` from the [UCI ML Repository](https://archive.i
 
 ### 4. Run
 ```bash
-python poc_v4.py
+python sample.py
 ```
-
-Output charts will be saved to the `outputs/` folder automatically.
 
 ---
 
@@ -130,7 +105,6 @@ A model that says "this child is at risk" is only useful if clinicians understan
 The A-score behavioral questions (A1–A10) consistently outrank age, gender, ethnicity, and other demographic features in importance. Communication and social responsiveness indicators are the strongest predictors.
 
 ---
-
 
 ## Contributing
 
